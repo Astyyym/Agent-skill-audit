@@ -17,7 +17,7 @@ metadata:
 
 A reusable workflow for reviewing, simplifying, and validating AI agent skills. It keeps skills focused on transferable procedures instead of absorbing a user's identity, persona, preferences, business data, project paths, machine configuration, or one-off history.
 
-The default scope is local and read-only. Auditing and editing are separate modes: inspection does not imply permission to change files. Repository, history, release, and public-publication checks are opt-in additions, not prerequisites for ordinary local skill work.
+The default scope is local and read-only. Auditing and editing are separate modes: inspection does not imply permission to change files. Repository, history, release, and publication checks are opt-in additions, not prerequisites for ordinary local skill work.
 
 ## When to Use
 
