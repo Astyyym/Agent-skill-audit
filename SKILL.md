@@ -1,7 +1,7 @@
 ---
 name: skill-audit-and-hygiene
-description: Use when auditing, simplifying, or publishing an AI agent skill. Separates reusable procedures from persona, user, project, and environment context, then validates the cleaned skill.
-version: 1.0.0
+description: Use when auditing or simplifying a local AI agent skill. Separates reusable procedures from persona, user, project, and environment context, then validates the local result. Use publication scope for repository or open-source checks.
+version: 1.1.0
 author: Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
@@ -17,13 +17,50 @@ metadata:
 
 A reusable workflow for reviewing, simplifying, and validating AI agent skills. It keeps skills focused on transferable procedures instead of absorbing a user's identity, persona, preferences, business data, project paths, machine configuration, or one-off history.
 
-Audit structure, ownership boundaries, process weight, duplication, evidence quality, and publication safety. Do not automatically edit, delete, or publish anything without an explicit delivery boundary.
+The default mode is a local audit. Repository, history, release, and public-publication checks are opt-in additions, not prerequisites for ordinary local skill work.
 
 ## When to Use
 
-Use when a skill is too long, slow to load, context-specific, duplicated, difficult to follow, or being prepared for public reuse. Also use when the user asks to audit, sanitize, slim down, modularize, or publish a skill.
+Use by default when auditing or simplifying a locally installed, locally created, or locally checked-out AI agent skill:
 
-Do not use for SOUL/persona edits, user-memory edits, product requirements, or implementation review of the software described by a skill.
+- the skill is too long or slow to load;
+- it contains user, persona, business, project, or machine-specific context;
+- it has duplicate or conflicting rules;
+- its references are poorly separated;
+- its workflow is too heavy for the task;
+- its evidence and validation language is unclear.
+
+Use the publication audit only when the user explicitly asks to open-source, publish, push, release, or prepare the skill for public reuse.
+
+Do not use for SOUL/persona edits, user-memory edits, product requirements, or implementation review of software described by a skill.
+
+## Default boundary
+
+The default audit is local-only. Do not commit, push, publish, create a release, inspect remote repository state, rewrite Git history, or perform public-release cleanup unless the user starts a separate publication audit or explicitly includes those actions in the task scope.
+
+## Audit modes
+
+### Local audit — default
+
+1. Locate and freeze the local skill group.
+2. Inspect `SKILL.md`, references, templates, scripts, examples, metadata, and applicable local instructions.
+3. Classify content ownership.
+4. Check persona, user, business, project, machine, and environment leakage.
+5. Check trigger quality, process weight, duplication, information architecture, and evidence language.
+6. Apply local changes only when explicitly authorized.
+7. Validate the local result and report findings.
+8. Stop.
+
+A local audit can complete without GitHub access, remote queries, commits, releases, or publication checks.
+
+### Publication audit — opt-in
+
+Run only when public reuse or repository delivery is explicitly in scope. Complete the local audit first, then additionally:
+
+1. Inspect repository status, history, examples, and release assets where relevant.
+2. Scan tracked and published content for secrets, private information, local paths, and generated artifacts.
+3. Verify repository, package, release, and platform states separately.
+4. Report public-release readiness separately from local-audit completion.
 
 ## Ownership boundary
 
@@ -42,11 +79,13 @@ A reusable skill must not contain personal names, forms of address, private path
 
 ### 1. Freeze the target
 
-Record the exact path, revision or hash, included files, local changes, requested delivery boundary, and whether the target is local-only, reusable, or public. Do not silently treat an unclear or changing copy as authoritative.
+For a local audit, record the local skill path, included files, current local revision when available, local changes, and requested audit scope. Record repository, remote, history, package, and release information only for an explicitly requested publication audit.
+
+Do not silently treat an unclear or changing copy as authoritative.
 
 ### 2. Read the whole skill group
 
-Inspect `SKILL.md`, linked references, templates, scripts, examples, metadata, related skills, and repository rules when applicable. Do not inspect only the main file; leakage often hides in references and examples.
+Inspect `SKILL.md`, linked references, templates, scripts, examples, metadata, related skills, and applicable repository rules. Do not inspect only the main file; leakage often hides in references and examples.
 
 ### 3. Classify before rewriting
 
@@ -102,6 +141,7 @@ Preserve transferable rules, generalize concrete examples, retain acceptance log
 ## Audit report
 
 ```text
+Audit mode: local | publication
 Target:
 Baseline:
 Scope:
@@ -116,43 +156,51 @@ Findings:
 - duplicate or stale:
 - not verified:
 
-Rewrite summary:
-Validation:
+Local validation:
+Publication validation:
 Remaining risks:
 Delivery state:
 ```
 
-Identify the file and section for every finding. Distinguish observed facts from interpretation.
+Identify the file and section for every finding. Distinguish observed facts from interpretation. For local audits, publication validation is `not applicable`, not an unfinished task.
 
 ## Validation checklist
 
+### Local audit
+
 - [ ] Frontmatter starts at byte zero; name, trigger description, and body are valid.
 - [ ] Size, naming, metadata, and linked references follow the host convention.
+- [ ] The complete local skill group was inspected.
 - [ ] No personal identity, persona, relationship, or preferred-address rules are embedded.
 - [ ] No private business data, personal paths, usernames, or hidden project assumptions remain.
 - [ ] Project-specific and environment-specific procedures are separated or clearly scoped.
 - [ ] Core workflow is understandable without unrelated context.
 - [ ] Task-size and risk escalation are covered where applicable.
-- [ ] Duplicate normative rules and stale content are removed.
+- [ ] Duplicate normative rules and stale content are removed or classified.
 - [ ] Evidence and status terms are explicit.
-- [ ] Conflict markers and sensitive-data leaks are absent.
-- [ ] `git diff --check` passes when Git is involved.
-- [ ] Local/repository copies match when synchronization is required.
-- [ ] Push, package, release, and platform acceptance are reported separately.
-- [ ] Destructive cleanup was authorized.
+- [ ] Local changes and conflict markers were checked where applicable.
+
+### Publication audit — only when explicitly in scope
+
+- [ ] Repository history and relevant release assets were inspected.
+- [ ] Public files were scanned for secrets and private information.
+- [ ] Repository, package, release, and platform states are reported separately.
+- [ ] Local and remote copies match when synchronization is required.
+- [ ] Publication readiness is reported separately from local-audit completion.
 
 ## Common pitfalls
 
-1. Deleting all concrete examples instead of separating principles from local context.
-2. Checking only `SKILL.md` and missing leakage in references, templates, or scripts.
-3. Making a skill shorter by removing acceptance criteria and evidence requirements.
-4. Keeping a personal rule because it makes the skill feel natural.
-5. Creating a reference without a trigger, causing unnecessary loading.
-6. Treating frontmatter validation as proof that the workflow is sound.
-7. Publishing the current tree without checking history, examples, or release assets.
-8. Changing behavior or delivery scope while calling the work documentation-only.
-9. Deleting old material before preserving required historical evidence.
+1. Checking repository or release state during a local-only audit.
+2. Deleting all concrete examples instead of separating principles from local context.
+3. Checking only `SKILL.md` and missing leakage in references, templates, or scripts.
+4. Making a skill shorter by removing acceptance criteria and evidence requirements.
+5. Keeping a personal rule because it makes the skill feel natural.
+6. Creating a reference without a trigger, causing unnecessary loading.
+7. Treating frontmatter validation as proof that the workflow is sound.
+8. Publishing a cleaned current tree without checking history, examples, and release assets.
+9. Changing behavior or delivery scope while calling the work documentation-only.
+10. Deleting old material before preserving required historical evidence.
 
 ## Completion rule
 
-The audit is complete only when the target and baseline are known, the whole skill group is inspected, ownership is classified, context is removed/moved/scoped, the reusable workflow remains executable, validation has run, and remaining unverified items and delivery state are reported honestly.
+A local audit is complete when the local target is known, the whole skill group is inspected, ownership is classified, context is removed/moved/scoped, the reusable workflow remains executable, local validation has run, and remaining unverified items are reported. A publication audit additionally requires the explicit publication checks and a separate public-readiness result.
