@@ -1,5 +1,5 @@
 ---
-name: skill-audit-and-hygiene
+name: agent-skill-audit
 description: Use when auditing or simplifying a local AI agent skill. Separates reusable procedures from persona, user, project, and environment context, then validates the local result. Use publication scope for repository or open-source checks.
 version: 1.1.0
 author: Hermes Agent
