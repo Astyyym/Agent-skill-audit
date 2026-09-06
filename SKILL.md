@@ -17,7 +17,7 @@ metadata:
 
 A reusable workflow for reviewing, simplifying, and validating AI agent skills. It keeps skills focused on transferable procedures instead of absorbing a user's identity, persona, preferences, business data, project paths, machine configuration, or one-off history.
 
-The default mode is a local audit. Repository, history, release, and public-publication checks are opt-in additions, not prerequisites for ordinary local skill work.
+The default scope is local and read-only. Auditing and editing are separate modes: inspection does not imply permission to change files. Repository, history, release, and public-publication checks are opt-in additions, not prerequisites for ordinary local skill work.
 
 ## When to Use
 
@@ -36,26 +36,39 @@ Do not use for SOUL/persona edits, user-memory edits, product requirements, or i
 
 ## Default boundary
 
-The default audit is local-only. Do not commit, push, publish, create a release, inspect remote repository state, rewrite Git history, or perform public-release cleanup unless the user starts a separate publication audit or explicitly includes those actions in the task scope.
+The default audit is local-only and audit-only. Do not edit files, commit, push, publish, create a release, inspect remote repository state, rewrite Git history, or perform public-release cleanup unless the user explicitly authorizes the corresponding scope.
+
+An instruction to audit, review, inspect, or report findings does not by itself authorize edits. An instruction to simplify, sanitize, or fix may authorize edits only when the target and edit boundary are clear; otherwise stop after the audit and ask for authorization.
 
 ## Audit modes
 
-### Local audit — default
+### Local audit-only — default
 
 1. Locate and freeze the local skill group.
 2. Inspect `SKILL.md`, references, templates, scripts, examples, metadata, and applicable local instructions.
 3. Classify content ownership.
 4. Check persona, user, business, project, machine, and environment leakage.
 5. Check trigger quality, process weight, duplication, information architecture, and evidence language.
-6. Apply local changes only when explicitly authorized.
-7. Validate the local result and report findings.
-8. Stop.
+6. Report findings and proposed changes without modifying files.
+7. Stop.
 
-A local audit can complete without GitHub access, remote queries, commits, releases, or publication checks.
+A local audit-only run can complete without editing files, GitHub access, remote queries, commits, releases, or publication checks.
+
+### Local audit-and-edit — opt-in
+
+Run only when the user explicitly authorizes changes, or when the task wording clearly requests a bounded edit such as “audit and fix this skill.” Complete the local audit-only steps first, then:
+
+1. Confirm the files and sections allowed to change.
+2. Preserve the audit findings and intended scope.
+3. Apply only the authorized local edits.
+4. Re-inspect the complete skill group for leakage, duplication, and scope drift.
+5. Validate the edited local result and report both findings and changes.
+
+If the audit reveals a change outside the authorized boundary, stop and report it instead of extending the edit.
 
 ### Publication audit — opt-in
 
-Run only when public reuse or repository delivery is explicitly in scope. Complete the local audit first, then additionally:
+Run only when public reuse or repository delivery is explicitly in scope. State separately whether the publication audit is audit-only or audit-and-edit. Complete the local audit first, then additionally:
 
 1. Inspect repository status, history, examples, and release assets where relevant.
 2. Scan tracked and published content for secrets, private information, local paths, and generated artifacts.
@@ -141,7 +154,7 @@ Preserve transferable rules, generalize concrete examples, retain acceptance log
 ## Audit report
 
 ```text
-Audit mode: local | publication
+Audit mode: local-audit-only | local-audit-and-edit | publication-audit-only | publication-audit-and-edit
 Target:
 Baseline:
 Scope:
@@ -162,11 +175,11 @@ Remaining risks:
 Delivery state:
 ```
 
-Identify the file and section for every finding. Distinguish observed facts from interpretation. For local audits, publication validation is `not applicable`, not an unfinished task.
+Identify the file and section for every finding. Distinguish observed facts from interpretation. For local audits, publication validation is `not applicable`, not an unfinished task. For audit-only runs, change status is `not applicable`; do not imply that recommended edits were applied.
 
 ## Validation checklist
 
-### Local audit
+### Local audit-only
 
 - [ ] Frontmatter starts at byte zero; name, trigger description, and body are valid.
 - [ ] Size, naming, metadata, and linked references follow the host convention.
@@ -180,8 +193,16 @@ Identify the file and section for every finding. Distinguish observed facts from
 - [ ] Evidence and status terms are explicit.
 - [ ] Local changes and conflict markers were checked where applicable.
 
+### Local audit-and-edit — only when explicitly authorized
+
+- [ ] The edit boundary was confirmed before changing files.
+- [ ] Only authorized files and sections were changed.
+- [ ] The edited skill group was re-inspected and revalidated.
+- [ ] Findings, applied changes, and remaining recommendations are reported separately.
+
 ### Publication audit — only when explicitly in scope
 
+- [ ] Audit-only versus audit-and-edit scope was explicit.
 - [ ] Repository history and relevant release assets were inspected.
 - [ ] Public files were scanned for secrets and private information.
 - [ ] Repository, package, release, and platform states are reported separately.
@@ -190,17 +211,18 @@ Identify the file and section for every finding. Distinguish observed facts from
 
 ## Common pitfalls
 
-1. Checking repository or release state during a local-only audit.
-2. Deleting all concrete examples instead of separating principles from local context.
-3. Checking only `SKILL.md` and missing leakage in references, templates, or scripts.
-4. Making a skill shorter by removing acceptance criteria and evidence requirements.
-5. Keeping a personal rule because it makes the skill feel natural.
-6. Creating a reference without a trigger, causing unnecessary loading.
-7. Treating frontmatter validation as proof that the workflow is sound.
-8. Publishing a cleaned current tree without checking history, examples, and release assets.
-9. Changing behavior or delivery scope while calling the work documentation-only.
-10. Deleting old material before preserving required historical evidence.
+1. Treating an audit or review request as permission to edit.
+2. Checking repository or release state during a local-only audit.
+3. Deleting all concrete examples instead of separating principles from local context.
+4. Checking only `SKILL.md` and missing leakage in references, templates, or scripts.
+5. Making a skill shorter by removing acceptance criteria and evidence requirements.
+6. Keeping a personal rule because it makes the skill feel natural.
+7. Creating a reference without a trigger, causing unnecessary loading.
+8. Treating frontmatter validation as proof that the workflow is sound.
+9. Publishing a cleaned current tree without checking history, examples, and release assets.
+10. Changing behavior or delivery scope while calling the work documentation-only.
+11. Deleting old material before preserving required historical evidence.
 
 ## Completion rule
 
-A local audit is complete when the local target is known, the whole skill group is inspected, ownership is classified, context is removed/moved/scoped, the reusable workflow remains executable, local validation has run, and remaining unverified items are reported. A publication audit additionally requires the explicit publication checks and a separate public-readiness result.
+A local audit-only run is complete when the local target is known, the whole skill group is inspected, ownership is classified, findings are reported, local validation has run, and no unauthorized edits occurred. A local audit-and-edit run additionally requires an explicit edit boundary, revalidation after changes, and separate reporting of applied and unapplied recommendations. A publication audit additionally requires the explicit publication checks and a separate public-readiness result.
